@@ -1,0 +1,22 @@
+{
+  "name": "gehel-rundeck",
+  "version": "0.1.0",
+  "summary": "",
+  "author": "",
+  "description": "",
+  "dependencies": [
+    {
+      "name": "example42/puppi",
+      "version_requirement": "2.0.8"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": "4.1.0"
+    }
+  ],
+  "types": [],
+  "checksums": {},
+  "source": "",
+  "project_page": "",
+  "license": ""
+}
