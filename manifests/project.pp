@@ -15,7 +15,6 @@ define rundeck::project (
         mode    => $rundeck::config_file_mode,
         owner   => $rundeck::config_file_owner,
         group   => $rundeck::config_file_group,
-        content => template(),
         replace => $rundeck::manage_file_replace,
         audit   => $rundeck::manage_audit,
       }
