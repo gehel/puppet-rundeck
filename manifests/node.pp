@@ -8,16 +8,18 @@ class rundeck::node (
   $username    = hiera('rundeck_node_username', 'rundeck'),
   $editUrl     = hiera('rundeck_node_editUrl', undef),
   $remoteUrl   = hiera('rundeck_node_remoteUrl', undef),
-  $attributes  = hiera('rundeck_node_attributes', {}),
-  $template    = hiera('rundeck_node_template', 'rundeck/project/resources-node.xml.erb')
-) {
+  $attributes  = hiera('rundeck_node_attributes', {
+  }
+  ),
+  $template    = hiera('rundeck_node_template', 'rundeck/project/resources-node.xml.erb')) {
   validate_array($tags)
   validate_hash($attributes)
 
   @@concat::fragment { "rundeck-resource-node-${::fqdn}":
-    target => '/var/rundeck/projects/resources.xml',
+    target  => '/var/rundeck/projects/resources.xml',
     content => template($template),
-    tag => 'rundeck-resource-node',
+    order   => 10,
+    tag     => 'rundeck-resource-node',
   }
 
 }

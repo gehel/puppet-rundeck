@@ -186,7 +186,7 @@ class rundeck (
   concat::fragment { "rundeck-resource-node-footer":
     target  => "${rundeck::project_dir}/resources.xml",
     content => '</project>',
-    order   => 100,
+    order   => 99,
     tag     => 'rundeck-resource-node',
   }
 
