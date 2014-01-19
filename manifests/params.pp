@@ -47,6 +47,10 @@ class rundeck::params {
   $project_dir = $::operatingsystem ? {
     default => '/var/rundeck/projects',
   }
+  
+  $template_dir = $::operatingsystem ? {
+    default => '/var/rundeck/templates',
+  }
 
   $log_dir = $::operatingsystem ? {
     default => '/var/log/rundeck',
@@ -54,6 +58,9 @@ class rundeck::params {
 
   $port = '4440'
   $protocol = 'tcp'
+  $manage_repos = false
+  
+  $projects = {}
 
   # General Settings
   $my_class = ''

@@ -1,0 +1,30 @@
+<node
+  name="<%= @name %>"
+  <%- if @description -%>
+  description="<%= @description %>"
+  <%- end -%>
+  hostname="<%= @hostname %>"
+  <%- if @osArch -%>
+  osArch="<%= @osArch %>"
+  <%- end -%>
+  <%- if @osFamily -%>
+  osFamily="<%= @osFamily %>"
+  <%- end -%>
+  <%- if @osName -%>
+  osName="<%= @osName %>"
+  <%- end -%>
+  <%- if @tags and !@tags.emtpy -%>
+  tags="<%= @tags.join(",") %>"
+  <%- end -%>
+  username="<%= @username %>"  
+  <%- if @editUrl -%>
+  editUrl="<%= @editUrl %>"
+  <%- end -%>
+  <%- if @remoteUrl -%>
+  remoteUrl="<%= @remoteUrl %>"
+  <%- end -%>
+>
+  <%- @attributes.each do |attribute| -%>
+  <attribute name="@attribute.name" value="@attribute.value" />
+  <%- end -%>
+</node>

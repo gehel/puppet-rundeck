@@ -9,5 +9,7 @@ project_page ''
 
 ## Add dependencies, if any:
 # dependency 'username/name', '>= 1.2.0'
-dependency 'example42/puppi', '2.0.8'
-dependency 'puppetlabs/stdlib', '4.1.0'
+dependency 'example42-puppi', '>=2.0.8'
+dependency 'puppetlabs-stdlib', '>=4.1.0'
+dependency 'example42-apt', '>=2.0.3'
+dependency 'puppetlabs-concat', '1.1.0-rc1'

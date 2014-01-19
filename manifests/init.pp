@@ -47,10 +47,13 @@ class rundeck (
   $pid_file            = params_lookup('pid_file'),
   $data_dir            = params_lookup('data_dir'),
   $project_dir         = params_lookup('project_dir'),
+  $template_dir        = params_lookup('template_dir'),
   $log_dir             = params_lookup('log_dir'),
   $log_file            = params_lookup('log_file'),
+  $manage_repos        = params_lookup('manage_repos'),
   $port                = params_lookup('port'),
-  $protocol            = params_lookup('protocol')) inherits rundeck::params {
+  $protocol            = params_lookup('protocol'),
+  $projects            = params_lookup('projects')) inherits rundeck::params {
   $bool_source_dir_purge = any2bool($source_dir_purge)
   $bool_service_autorestart = any2bool($service_autorestart)
   $bool_absent = any2bool($absent)
@@ -61,6 +64,7 @@ class rundeck (
   $bool_firewall = any2bool($firewall)
   $bool_debug = any2bool($debug)
   $bool_audit_only = any2bool($audit_only)
+  $bool_manage_repos = any2bool($manage_repos)
 
   # ## Definition of some variables used in the module
   $manage_package = $rundeck::bool_absent ? {
@@ -92,6 +96,11 @@ class rundeck (
   $manage_file = $rundeck::bool_absent ? {
     true    => 'absent',
     default => 'present',
+  }
+
+  $manage_directory = $rundeck::bool_absent ? {
+    true    => 'absent',
+    default => 'directory',
   }
 
   if $rundeck::bool_absent == true or $rundeck::bool_disable == true or $rundeck::bool_disableboot == true {
@@ -126,10 +135,17 @@ class rundeck (
     default => template($rundeck::template),
   }
 
+  validate_hash($projects)
+  $template_job_dir = "${rundeck::params::template_dir}/jobs"
+
   # ## Managed resources
+  class { 'rundeck::repository':
+  }
+
   package { 'rundeck':
-    ensure => $rundeck::manage_package,
-    name   => $rundeck::package,
+    ensure  => $rundeck::manage_package,
+    name    => $rundeck::package,
+    require => Class['rundeck::repository'],
   }
 
   if $rundeck::bool_absent == false {
@@ -157,6 +173,51 @@ class rundeck (
     audit   => $rundeck::manage_audit,
   }
 
+  concat::fragment { "rundeck-resource-node-header":
+    target  => "${rundeck::project_dir}/resources.xml",
+    content => '<project>',
+    order   => 0,
+    tag     => 'rundeck-resource-node',
+  }
+
+  Concat::Fragment <<| tag == 'rundeck-resource-node' |>>
+
+  concat::fragment { "rundeck-resource-node-footer":
+    target  => "${rundeck::project_dir}/resources.xml",
+    content => '</project>',
+    order   => 100,
+    tag     => 'rundeck-resource-node',
+  }
+
+  concat { "${rundeck::project_dir}/resources.xml":
+    ensure => $rundeck::manage_file,
+    mode    => $rundeck::config_file_mode,
+    owner   => $rundeck::config_file_owner,
+    group   => $rundeck::config_file_group,
+  }
+
+  file { 'rundeck-template.dir':
+    ensure  => $manage_directory,
+    path    => $rundeck::template_dir,
+    mode    => $rundeck::config_file_mode,
+    owner   => $rundeck::config_file_owner,
+    group   => $rundeck::config_file_group,
+    purge   => true,
+    require => Package['rundeck'],
+    audit   => $rundeck::manage_audit,
+  }
+
+  file { 'rundeck-template-jobs.dir':
+    ensure  => $manage_directory,
+    path    => $rundeck::template_job_dir,
+    mode    => $rundeck::config_file_mode,
+    owner   => $rundeck::config_file_owner,
+    group   => $rundeck::config_file_group,
+    purge   => true,
+    require => Package['rundeck'],
+    audit   => $rundeck::manage_audit,
+  }
+
   # ## Include custom class if $my_class is set
   if $rundeck::my_class {
     include $rundeck::my_class
@@ -171,23 +232,31 @@ class rundeck (
       variables => $classvars,
       helper    => $rundeck::puppi_helper,
     }
-    
-    puppi::log {'rundeck':
-      log => [
-          "${rundeck::log_dir}/rundeck.access.log",
-          "${rundeck::log_dir}/rundeck.api.log",
-          "${rundeck::log_dir}/rundeck.audit.log",
-          "${rundeck::log_dir}/rundeck.jobs.log",
-          "${rundeck::log_dir}/rundeck.log",
-          "${rundeck::log_dir}/rundeck.options.log",
-          "${rundeck::log_dir}/service.log",
-      ],
+
+    puppi::log { 'rundeck':
+      log         => [
+        "${rundeck::log_dir}/rundeck.access.log",
+        "${rundeck::log_dir}/rundeck.api.log",
+        "${rundeck::log_dir}/rundeck.audit.log",
+        "${rundeck::log_dir}/rundeck.jobs.log",
+        "${rundeck::log_dir}/rundeck.log",
+        "${rundeck::log_dir}/rundeck.options.log",
+        "${rundeck::log_dir}/service.log",
+        ],
       description => 'Rundeck logs',
     }
   }
 
   # ## Service monitoring, if enabled ( monitor => true )
   if $rundeck::bool_monitor == true {
+    monitor::port { "rundeck_${rundeck::protocol}_${rundeck::port}":
+      protocol => $rundeck::protocol,
+      port     => $rundeck::port,
+      target   => $rundeck::monitor_target,
+      tool     => $rundeck::monitor_tool,
+      enable   => $rundeck::manage_monitor,
+    }
+
     monitor::process { 'rundeck_process':
       process  => $rundeck::process,
       service  => $rundeck::service,
@@ -212,4 +281,6 @@ class rundeck (
       enable      => $rundeck::manage_firewall,
     }
   }
+
+  create_resources('rundeck::project', $projects)
 }
