@@ -25,6 +25,6 @@
   <%- end -%>
 >
   <%- @attributes.each do |attribute| -%>
-  <attribute name="@attribute['name']" value="@attribute['value']" />
+  <attribute name="<%= @attribute['name'] %>" value="<%= @attribute['value'] %>" />
   <%- end -%>
 </node>
