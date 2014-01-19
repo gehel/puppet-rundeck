@@ -68,7 +68,7 @@ class rundeck::params {
   $source = ''
   $source_dir = ''
   $source_dir_purge = false
-  $template = ''
+  $template = 'rundeck/rundeck-config.properties.erb'
   $version = 'present'
   $options = ''
   $service_autorestart = true
