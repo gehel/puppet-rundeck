@@ -1,4 +1,5 @@
 class rundeck::node (
+  $node_name   = hiera('rundeck_node_name', $::hostname),
   $description = hiera('rundeck_node_description', undef),
   $hostname    = hiera('rundeck_node_hostname', $::fqdn),
   $osArch      = hiera('rundeck_node_osArch', $::architecture),

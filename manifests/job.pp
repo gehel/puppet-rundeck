@@ -4,7 +4,7 @@ define rundeck::job (
   $description         = '',
   $command_exec,
   $command_description = '',
-  $filter,
+  $filter              = '',
   $template            = 'rundeck/job/simple_job.yaml.erb',
   $format              = 'xml',
   $job_loglevel        = 'INFO',
