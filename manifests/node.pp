@@ -12,7 +12,7 @@ class rundeck::node (
   $attributes  = hiera('rundeck_node_attributes', []),
   $template    = hiera('rundeck_node_template', 'rundeck/project/resources-node.xml.erb')) {
   validate_array($tags)
-  validate_hash($attributes)
+  validate_array($attributes)
 
   @@concat::fragment { "rundeck-resource-node-${::fqdn}":
     target  => '/var/rundeck/projects/resources.xml',
