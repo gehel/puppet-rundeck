@@ -17,12 +17,14 @@ define rundeck::project (
         group   => $rundeck::config_file_group,
         replace => $rundeck::manage_file_replace,
         audit   => $rundeck::manage_audit,
+        require => Package[$rundeck::package],
       }
 
       exec { "rundeck-project-${name}":
         path    => '/usr/bin',
         command => "rd-project -p ${name} -a create",
         creates => "${rundeck::project_dir}/${name}",
+        require => Package[$rundeck::package],
       }
     }
     'absent'  : {

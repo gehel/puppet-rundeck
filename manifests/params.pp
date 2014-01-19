@@ -56,6 +56,7 @@ class rundeck::params {
     default => '/var/log/rundeck',
   }
 
+  $server_name = 'localhost'
   $port = '4440'
   $protocol = 'tcp'
   $manage_repos = false

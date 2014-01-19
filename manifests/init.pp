@@ -48,6 +48,7 @@ class rundeck (
   $data_dir            = params_lookup('data_dir'),
   $project_dir         = params_lookup('project_dir'),
   $template_dir        = params_lookup('template_dir'),
+  $server_url          = params_lookup('server_url'),
   $log_dir             = params_lookup('log_dir'),
   $log_file            = params_lookup('log_file'),
   $manage_repos        = params_lookup('manage_repos'),
