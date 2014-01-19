@@ -10,8 +10,8 @@ framework.server.hostname = <%= scope.lookupvar('rundeck::server_name') %>
 framework.server.port = <%= scope.lookupvar('rundeck::port') %>
 framework.server.url = http://<%= scope.lookupvar('rundeck::server_name') %>:<%= scope.lookupvar('rundeck::port') %>
 # Username/password used by CLI tools.
-framework.server.username = admin
-framework.server.password = admin
+framework.server.username = <%= scope.lookupvar('rundeck::username') %>
+framework.server.password = <%= scope.lookupvar('rundeck::password') %>
 
 # ----------------------------------------------------------------
 # Installation locations

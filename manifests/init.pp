@@ -54,6 +54,8 @@ class rundeck (
   $server_name         = params_lookup('server_name'),
   $log_dir             = params_lookup('log_dir'),
   $log_file            = params_lookup('log_file'),
+  $username            = params_lookup('username'),
+  $password            = params_lookup('password'),
   $manage_repos        = params_lookup('manage_repos'),
   $port                = params_lookup('port'),
   $protocol            = params_lookup('protocol'),

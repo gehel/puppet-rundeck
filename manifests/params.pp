@@ -50,7 +50,7 @@ class rundeck::params {
   $project_dir = $::operatingsystem ? {
     default => '/var/rundeck/projects',
   }
-  
+
   $template_dir = $::operatingsystem ? {
     default => '/var/rundeck/templates',
   }
@@ -59,12 +59,15 @@ class rundeck::params {
     default => '/var/log/rundeck',
   }
 
+  $username = 'admin'
+  $password = 'admin'
   $server_name = 'localhost'
   $port = '4440'
   $protocol = 'tcp'
   $manage_repos = false
-  
-  $projects = {}
+
+  $projects = {
+  }
 
   # General Settings
   $my_class = ''
