@@ -13,9 +13,11 @@
 class rundeck (
   $my_class            = params_lookup('my_class'),
   $source              = params_lookup('source'),
+  $framework_source    = params_lookup('framework_source'),
   $source_dir          = params_lookup('source_dir'),
   $source_dir_purge    = params_lookup('source_dir_purge'),
   $template            = params_lookup('template'),
+  $framework_template  = params_lookup('framework_template'),
   $service_autorestart = params_lookup('service_autorestart', 'global'),
   $options             = params_lookup('options'),
   $version             = params_lookup('version'),
@@ -41,6 +43,7 @@ class rundeck (
   $process_user        = params_lookup('process_user'),
   $config_dir          = params_lookup('config_dir'),
   $config_file         = params_lookup('config_file'),
+  $framework_file      = params_lookup('framework_file'),
   $config_file_mode    = params_lookup('config_file_mode'),
   $config_file_owner   = params_lookup('config_file_owner'),
   $config_file_group   = params_lookup('config_file_group'),
@@ -131,9 +134,19 @@ class rundeck (
     default => $rundeck::source,
   }
 
+  $manage_framework_file_source = $rundeck::framework_source ? {
+    ''      => undef,
+    default => $rundeck::framework_source,
+  }
+
   $manage_file_content = $rundeck::template ? {
     ''      => undef,
     default => template($rundeck::template),
+  }
+
+  $manage_framework_file_content = $rundeck::framework_template ? {
+    ''      => undef,
+    default => template($rundeck::framework_template),
   }
 
   validate_hash($projects)
@@ -170,6 +183,20 @@ class rundeck (
     notify  => $rundeck::manage_service_autorestart,
     source  => $rundeck::manage_file_source,
     content => $rundeck::manage_file_content,
+    replace => $rundeck::manage_file_replace,
+    audit   => $rundeck::manage_audit,
+  }
+
+  file { 'rundeck-framework.properties':
+    ensure  => $rundeck::manage_file,
+    path    => $rundeck::framework_file,
+    mode    => $rundeck::config_file_mode,
+    owner   => $rundeck::config_file_owner,
+    group   => $rundeck::config_file_group,
+    require => Package['rundeck'],
+    notify  => $rundeck::manage_service_autorestart,
+    source  => $rundeck::manage_framework_file_source,
+    content => $rundeck::manage_framework_file_content,
     replace => $rundeck::manage_file_replace,
     audit   => $rundeck::manage_audit,
   }

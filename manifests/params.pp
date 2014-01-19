@@ -21,6 +21,9 @@ class rundeck::params {
   $config_dir = $::operatingsystem ? {
     default => '/etc/rundeck',
   }
+  $framework_file = $::operatingsystem ? {
+    default => '/etc/rundeck/framework.properties',
+  }
   $config_file = $::operatingsystem ? {
     default => '/etc/rundeck/rundeck-config.properties',
   }
@@ -66,9 +69,11 @@ class rundeck::params {
   # General Settings
   $my_class = ''
   $source = ''
+  $framework_source = ''
   $source_dir = ''
   $source_dir_purge = false
   $template = 'rundeck/rundeck-config.properties.erb'
+  $framework_template = 'rundeck/framework.properties.erb'
   $version = 'present'
   $options = ''
   $service_autorestart = true

@@ -9,9 +9,7 @@ class rundeck::node (
   $username    = hiera('rundeck_node_username', 'rundeck'),
   $editUrl     = hiera('rundeck_node_editUrl', undef),
   $remoteUrl   = hiera('rundeck_node_remoteUrl', undef),
-  $attributes  = hiera('rundeck_node_attributes', {
-  }
-  ),
+  $attributes  = hiera('rundeck_node_attributes', []),
   $template    = hiera('rundeck_node_template', 'rundeck/project/resources-node.xml.erb')) {
   validate_array($tags)
   validate_hash($attributes)
