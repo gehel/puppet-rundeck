@@ -15,7 +15,7 @@ class rundeck::node (
   validate_hash($attributes)
 
   @@concat::fragment { "rundeck-resource-node-${::fqdn}":
-    target => "${rundeck::project_dir}/resources.xml",
+    target => '/var/rundeck/projects/resources.xml',
     content => template($template),
     tag => 'rundeck-resource-node',
   }
