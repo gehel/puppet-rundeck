@@ -256,7 +256,7 @@ class rundeck (
     owner   => $rundeck::process_user,
     group   => $rundeck::config_file_group,
     recurse => true,
-    purge   => true,
+    purge   => false,
     require => Package['rundeck'],
     audit   => $rundeck::manage_audit,
   }
