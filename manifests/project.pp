@@ -23,6 +23,7 @@ define rundeck::project (
       exec { "rundeck-project-${name}":
         path    => '/usr/bin',
         command => "rd-project -p ${name} -a create",
+        user    => $rundeck::process_user,
         creates => "${rundeck::project_dir}/${name}",
         require => Package[$rundeck::package],
       }

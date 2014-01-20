@@ -53,7 +53,8 @@ class rundeck (
   $template_dir        = params_lookup('template_dir'),
   $server_name         = params_lookup('server_name'),
   $log_dir             = params_lookup('log_dir'),
-  $log_file            = params_lookup('log_file'),
+  $log_files           = params_lookup('log_files'),
+  $log_file_mode       = params_lookup('log_file_mode'),
   $username            = params_lookup('username'),
   $password            = params_lookup('password'),
   $manage_repos        = params_lookup('manage_repos'),
@@ -248,6 +249,18 @@ class rundeck (
     audit   => $rundeck::manage_audit,
   }
 
+  file { 'rundeck-log.dir':
+    ensure  => $manage_directory,
+    path    => $rundeck::log_dir,
+    mode    => $rundeck::log_file_mode,
+    owner   => $rundeck::process_user,
+    group   => $rundeck::config_file_group,
+    recurse => true,
+    purge   => true,
+    require => Package['rundeck'],
+    audit   => $rundeck::manage_audit,
+  }
+
   # ## Include custom class if $my_class is set
   if $rundeck::my_class {
     include $rundeck::my_class
@@ -264,15 +277,7 @@ class rundeck (
     }
 
     puppi::log { 'rundeck':
-      log         => [
-        "${rundeck::log_dir}/rundeck.access.log",
-        "${rundeck::log_dir}/rundeck.api.log",
-        "${rundeck::log_dir}/rundeck.audit.log",
-        "${rundeck::log_dir}/rundeck.jobs.log",
-        "${rundeck::log_dir}/rundeck.log",
-        "${rundeck::log_dir}/rundeck.options.log",
-        "${rundeck::log_dir}/service.log",
-        ],
+      log         => $rundeck::log_files,
       description => 'Rundeck logs',
     }
   }

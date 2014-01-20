@@ -59,6 +59,17 @@ class rundeck::params {
     default => '/var/log/rundeck',
   }
 
+  $log_files = [
+    "${rundeck::log_dir}/rundeck.access.log",
+    "${rundeck::log_dir}/rundeck.api.log",
+    "${rundeck::log_dir}/rundeck.audit.log",
+    "${rundeck::log_dir}/rundeck.jobs.log",
+    "${rundeck::log_dir}/rundeck.log",
+    "${rundeck::log_dir}/rundeck.options.log",
+    "${rundeck::log_dir}/service.log",
+    ]
+  $log_file_mode = '0644'
+
   $username = 'admin'
   $password = 'admin'
   $server_name = 'localhost'
