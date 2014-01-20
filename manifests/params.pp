@@ -60,13 +60,13 @@ class rundeck::params {
   }
 
   $log_files = [
-    "${rundeck::log_dir}/rundeck.access.log",
-    "${rundeck::log_dir}/rundeck.api.log",
-    "${rundeck::log_dir}/rundeck.audit.log",
-    "${rundeck::log_dir}/rundeck.jobs.log",
-    "${rundeck::log_dir}/rundeck.log",
-    "${rundeck::log_dir}/rundeck.options.log",
-    "${rundeck::log_dir}/service.log",
+    "${log_dir}/rundeck.access.log",
+    "${log_dir}/rundeck.api.log",
+    "${log_dir}/rundeck.audit.log",
+    "${log_dir}/rundeck.jobs.log",
+    "${log_dir}/rundeck.log",
+    "${log_dir}/rundeck.options.log",
+    "${log_dir}/service.log",
     ]
   $log_file_mode = '0644'
 
