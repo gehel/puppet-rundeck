@@ -6,12 +6,12 @@ class rundeck::node (
   $osFamily            = hiera('rundeck_node_osFamily', $::osfamily),
   $osName              = hiera('rundeck_node_osName', $::operatingsystem),
   $tags                = hiera('rundeck_node_tags', []),
-  $username            = hiera('rundeck_node_username', 'rundeck'),
   $editUrl             = hiera('rundeck_node_editUrl', undef),
   $remoteUrl           = hiera('rundeck_node_remoteUrl', undef),
   $attributes          = hiera('rundeck_node_attributes', []),
   $template            = hiera('rundeck_node_template', 'rundeck/project/resources-node.xml.erb'),
-  $node_username       = hiera('rundeck_node_username', 'rundeck_node'),
+  $username            = hiera('rundeck_node_username', 'rundeck_node'),
+  $home_dir            = hiera('rundeck_node_home_dir', '/var/lib/rundeck_node'),
   $ssh_public_key      = hiera('rundeck_ssh_public_key', ''),
   $ssh_public_key_type = hiera('rundeck_ssh_public_key_type', 'ssh-rsa')) {
   validate_array($tags)
@@ -25,14 +25,14 @@ class rundeck::node (
   }
 
   user { 'rundeck_node_user':
-    name  => $node_username,
-    gid   => 'nobody',
+    name  => $username,
     home  => '/',
+    managehome => true,
     shell => '/bin/sh',
   }
 
   ssh_authorized_key { 'Rundeck agent':
-    user => $node_username,
+    user => $username,
     key  => $ssh_public_key,
     type => $ssh_public_key_type,
   }
