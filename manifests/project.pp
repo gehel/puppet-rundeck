@@ -1,9 +1,19 @@
 define rundeck::project (
-  $ensure   = 'present',
-  $jobs     = {
+  $ensure              = 'present',
+  $jobs                = {
   }
   ,
-  $template = 'rundeck/project/resources.xml.erb',) {
+  $template            = $rundeck::project_template,
+  $ssh_authentication  = 'privateKey',
+  $ssh_keypath         = "${rundeck::data_dir}/.ssh/id_rsa",
+  $service_node_executor_default_provider        = 'jsch-ssh',
+  $service_file_copier_default_provider          = 'jsch-scp',
+  $resources_include_server_node = false,
+  $resources_generate_file_automatically = false,
+  $resources_file      = $rundeck::resources_file,) {
+  validate_bool($resources_include_server_node)
+  validate_bool($resources_generate_file_automatically)
+
   include rundeck
 
   case $ensure {
@@ -25,6 +35,16 @@ define rundeck::project (
         command => "rd-project -p ${name} -a create",
         user    => $rundeck::process_user,
         creates => "${rundeck::project_dir}/${name}",
+        require => Package[$rundeck::package],
+      } -> file { "rundeck-project-properties":
+        path    => "${rundeck::project_dir}/${name}/etc/project.properties",
+        ensure  => $ensure,
+        content => template($template),
+        mode    => $rundeck::config_file_mode,
+        owner   => $rundeck::config_file_owner,
+        group   => $rundeck::config_file_group,
+        replace => $rundeck::manage_file_replace,
+        audit   => $rundeck::manage_audit,
         require => Package[$rundeck::package],
       }
     }

@@ -51,6 +51,10 @@ class rundeck::params {
     default => '/var/rundeck/projects',
   }
 
+  $resources_file = $::operatingsystem ? {
+    default => '/var/rundeck/projects/resources.xml',
+  }
+
   $template_dir = $::operatingsystem ? {
     default => '/var/rundeck/templates',
   }
@@ -87,6 +91,7 @@ class rundeck::params {
   $source_dir = ''
   $source_dir_purge = false
   $template = 'rundeck/rundeck-config.properties.erb'
+  $project_template = 'rundeck/project/project.properties.erb'
   $framework_template = 'rundeck/framework.properties.erb'
   $version = 'present'
   $options = ''

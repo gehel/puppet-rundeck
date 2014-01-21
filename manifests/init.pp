@@ -17,6 +17,7 @@ class rundeck (
   $source_dir          = params_lookup('source_dir'),
   $source_dir_purge    = params_lookup('source_dir_purge'),
   $template            = params_lookup('template'),
+  $project_template    = params_lookup('project_template'),
   $framework_template  = params_lookup('framework_template'),
   $service_autorestart = params_lookup('service_autorestart', 'global'),
   $options             = params_lookup('options'),
@@ -41,6 +42,7 @@ class rundeck (
   $process             = params_lookup('process'),
   $process_args        = params_lookup('process_args'),
   $process_user        = params_lookup('process_user'),
+  $ssh_private_key     = '',
   $config_dir          = params_lookup('config_dir'),
   $config_file         = params_lookup('config_file'),
   $framework_file      = params_lookup('framework_file'),
@@ -50,6 +52,7 @@ class rundeck (
   $pid_file            = params_lookup('pid_file'),
   $data_dir            = params_lookup('data_dir'),
   $project_dir         = params_lookup('project_dir'),
+  $resources_file      = params_lookup('resources_file'),
   $template_dir        = params_lookup('template_dir'),
   $server_name         = params_lookup('server_name'),
   $log_dir             = params_lookup('log_dir'),
@@ -101,6 +104,11 @@ class rundeck (
   }
 
   $manage_file = $rundeck::bool_absent ? {
+    true    => 'absent',
+    default => 'present',
+  }
+
+  $manage_user = $rundeck::bool_absent ? {
     true    => 'absent',
     default => 'present',
   }
@@ -164,7 +172,7 @@ class rundeck (
     name    => $rundeck::package,
     require => Class['rundeck::repository'],
   }
-
+  
   if $rundeck::bool_absent == false {
     service { 'rundeck':
       ensure    => $rundeck::manage_service_ensure,
@@ -174,6 +182,29 @@ class rundeck (
       pattern   => $rundeck::process,
       require   => Package['rundeck'],
     }
+  }
+
+  file { 'rundeck-ssh-dir':
+    ensure  => $rundeck::manage_directory,
+    path    => "${rundeck::data_dir}/.ssh",
+    mode    => '0644',
+    owner   => $rundeck::process_user,
+    group   => $rundeck::config_file_group,
+    require => Package['rundeck'],
+    replace => $rundeck::manage_file_replace,
+    audit   => $rundeck::manage_audit,
+  }
+
+  file { 'rundeck-ssh-private-key':
+    ensure  => $rundeck::manage_file,
+    path    => "${rundeck::data_dir}/.ssh/id_rsa",
+    mode    => '0600',
+    owner   => $rundeck::process_user,
+    group   => $rundeck::config_file_group,
+    require => Package['rundeck'],
+    content => $rundeck::ssh_private_key,
+    replace => $rundeck::manage_file_replace,
+    audit   => $rundeck::manage_audit,
   }
 
   file { 'rundeck-config.properties':
@@ -222,9 +253,9 @@ class rundeck (
 
   concat { "${rundeck::project_dir}/resources.xml":
     ensure => $rundeck::manage_file,
-    mode    => $rundeck::config_file_mode,
-    owner   => $rundeck::config_file_owner,
-    group   => $rundeck::config_file_group,
+    mode   => $rundeck::config_file_mode,
+    owner  => $rundeck::config_file_owner,
+    group  => $rundeck::config_file_group,
   }
 
   file { 'rundeck-template.dir':
