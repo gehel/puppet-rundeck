@@ -26,7 +26,7 @@ class rundeck::node (
 
   user { 'rundeck_node_user':
     name  => $username,
-    home  => '/',
+    home  => $home_dir,
     managehome => true,
     shell => '/bin/sh',
   }
