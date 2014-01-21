@@ -42,7 +42,7 @@ class rundeck (
   $process             = params_lookup('process'),
   $process_args        = params_lookup('process_args'),
   $process_user        = params_lookup('process_user'),
-  $ssh_private_key     = '',
+  $ssh_private_key     = params_lookup('ssh_private_key'),
   $config_dir          = params_lookup('config_dir'),
   $config_file         = params_lookup('config_file'),
   $framework_file      = params_lookup('framework_file'),

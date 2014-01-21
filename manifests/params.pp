@@ -90,6 +90,7 @@ class rundeck::params {
   $framework_source = ''
   $source_dir = ''
   $source_dir_purge = false
+  $ssh_private_key = ''
   $template = 'rundeck/rundeck-config.properties.erb'
   $project_template = 'rundeck/project/project.properties.erb'
   $framework_template = 'rundeck/framework.properties.erb'
