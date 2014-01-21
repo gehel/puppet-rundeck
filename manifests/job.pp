@@ -16,7 +16,7 @@ define rundeck::job ($ensure = 'present', $project, $format = 'xml', $content = 
         owner   => $rundeck::config_file_owner,
         group   => $rundeck::config_file_group,
         audit   => $rundeck::manage_audit,
-        require => Package[$rundeck::package],
+        require => Rundeck::Project[$project],
       } ~> exec { "rundeck-job-load-${name}":
         command     => "rd-jobs load -p ${project} --file ${template_file} -F ${format} -r",
         path        => '/usr/bin',
