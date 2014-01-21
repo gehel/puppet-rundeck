@@ -1,13 +1,4 @@
-define rundeck::job (
-  $ensure     = 'present',
-  $project,
-  $format     = 'xml',
-  $content    = undef,
-  $source     = undef,
-  $template   = undef,
-  $parameters = {
-  }
-  ,) {
+define rundeck::job ($ensure = 'present', $project, $format = 'xml', $content = undef, $source = undef,) {
   if !($format == 'xml' or $format == 'yaml') {
     fail("format can only be 'xml' or 'yaml', ${format} is not supported")
   }
@@ -19,7 +10,8 @@ define rundeck::job (
       file { "rundeck-job-template-${name}":
         ensure  => $ensure,
         path    => $template_file,
-        content => template($template),
+        content => $content,
+        source  => $source,
         mode    => $rundeck::config_file_mode,
         owner   => $rundeck::config_file_owner,
         group   => $rundeck::config_file_group,
