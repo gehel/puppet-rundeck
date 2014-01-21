@@ -1,19 +1,19 @@
 - id: 1
   project: <%= @project %>
-  loglevel: <%= @job_loglevel %>
+  loglevel: <%= @parameters['job_loglevel'] %>
   sequence:
-    keepgoing: <%= @keepgoing %>
-    strategy: <%= @strategy %>
+    keepgoing: <%= @parameters['keepgoing'] %>
+    strategy: <%= @parameters['strategy'] %>
     commands:
-    - exec: <%= @command_exec %>
-      description: <%= @command_description %>
-  description: <%= @description %>
+    - exec: <%= @parameters['command_exec'] %>
+      description: <%= @parameters['command_description'] %>
+  description: <%= @parameters['description'] %>
   name: <%= @name %>
   uuid: 9a3b49e3-95a1-4504-b7ab-8d3b382c78c2
   nodefilters:
     dispatch:
       threadcount: 1
-      keepgoing: <%= @keepgoing %>
+      keepgoing: <%= @parameters['keepgoing'] %>
       excludePrecedence: true
       rankOrder: ascending
-    filter: <%= @filter %>
+    filter: <%= @parameters['filter'] %>

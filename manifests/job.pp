@@ -1,15 +1,13 @@
 define rundeck::job (
-  $ensure              = 'present',
+  $ensure     = 'present',
   $project,
-  $description         = '',
-  $command_exec,
-  $command_description = '',
-  $filter              = '',
-  $template            = 'rundeck/job/simple_job.yaml.erb',
-  $format              = 'xml',
-  $job_loglevel        = 'INFO',
-  $keepgoing           = true,
-  $strategy            = 'node-first',) {
+  $format     = 'xml',
+  $content    = undef,
+  $source     = undef,
+  $template   = undef,
+  $parameters = {
+  }
+  ,) {
   if !($format == 'xml' or $format == 'yaml') {
     fail("format can only be 'xml' or 'yaml', ${format} is not supported")
   }
@@ -31,7 +29,7 @@ define rundeck::job (
         command     => "rd-jobs load -p ${project} --file ${template_file} -F ${format} -r",
         path        => '/usr/bin',
         refreshonly => true,
-        require => Package[$rundeck::package],
+        require     => Package[$rundeck::package],
       }
     }
     'absent'  : {
