@@ -27,11 +27,12 @@ class rundeck::node (
   user { 'rundeck_node_user':
     name  => $username,
     home  => $home_dir,
-    managehome => true,
     shell => '/bin/sh',
-  }
-
-  ssh_authorized_key { 'Rundeck agent':
+  } -> file { 'rundeck_node_home':
+    ensure => 'directory',
+    owner  => User['rundeck_node_user'],
+    mode   => '0755',
+  } -> ssh_authorized_key { 'Rundeck agent':
     user => $username,
     key  => $ssh_public_key,
     type => $ssh_public_key_type,
