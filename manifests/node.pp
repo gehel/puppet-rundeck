@@ -29,6 +29,7 @@ class rundeck::node (
     home  => $home_dir,
     shell => '/bin/sh',
   } -> file { 'rundeck_node_home':
+    path => $home_dir,
     ensure => 'directory',
     owner  => User['rundeck_node_user'],
     mode   => '0755',
