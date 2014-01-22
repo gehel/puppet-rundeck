@@ -18,6 +18,9 @@ class rundeck::params {
   $process_user = $::operatingsystem ? {
     default => 'rundeck',
   }
+  $process_group = $::operatingsystem ? {
+    default => 'rundeck',
+  }
   $config_dir = $::operatingsystem ? {
     default => '/etc/rundeck',
   }

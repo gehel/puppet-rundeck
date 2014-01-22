@@ -42,6 +42,7 @@ class rundeck (
   $process             = params_lookup('process'),
   $process_args        = params_lookup('process_args'),
   $process_user        = params_lookup('process_user'),
+  $process_group       = params_lookup('process_group'),
   $ssh_private_key     = params_lookup('ssh_private_key'),
   $config_dir          = params_lookup('config_dir'),
   $config_file         = params_lookup('config_file'),
@@ -289,6 +290,28 @@ class rundeck (
     recurse => true,
     purge   => false,
     require => Package['rundeck'],
+    audit   => $rundeck::manage_audit,
+  }
+
+  file { 'rundeck-tmp-dir':
+    ensure  => $rundeck::manage_directory,
+    path    => "${rundeck::data_dir}/var/tmp",
+    mode    => '0775',
+    owner   => $rundeck::process_user,
+    group   => $rundeck::process_group,
+    require => Package['rundeck'],
+    replace => $rundeck::manage_file_replace,
+    audit   => $rundeck::manage_audit,
+  }
+
+  file { 'rundeck-pluginJars-dir':
+    ensure  => $rundeck::manage_directory,
+    path    => "${rundeck::data_dir}/var/tmp/pluginJars",
+    mode    => '0775',
+    owner   => $rundeck::process_user,
+    group   => $rundeck::process_group,
+    require => Package['rundeck'],
+    replace => $rundeck::manage_file_replace,
     audit   => $rundeck::manage_audit,
   }
 
