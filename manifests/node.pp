@@ -13,9 +13,11 @@ class rundeck::node (
   $username            = hiera('rundeck_node_username', 'rundeck_node'),
   $home_dir            = hiera('rundeck_node_home_dir', '/var/lib/rundeck_node'),
   $ssh_public_key      = hiera('rundeck_ssh_public_key', ''),
-  $ssh_public_key_type = hiera('rundeck_ssh_public_key_type', 'ssh-rsa')) {
+  $ssh_public_key_type = hiera('rundeck_ssh_public_key_type', 'ssh-rsa'),
+  $ssh_options         = hiera('rundeck_ssh_options',[])) {
   validate_array($tags)
   validate_array($attributes)
+  validate_array($ssh_options)
 
   @@concat::fragment { "rundeck-resource-node-${::fqdn}":
     target  => '/var/rundeck/projects/resources.xml',
@@ -30,8 +32,9 @@ class rundeck::node (
     home        => $home_dir,
     managehome  => true,
   } -> ssh_authorized_key { 'Rundeck agent':
-    user => $username,
-    key  => $ssh_public_key,
-    type => $ssh_public_key_type,
+    user    => $username,
+    key     => $ssh_public_key,
+    type    => $ssh_public_key_type,
+    options => $ssh_options
   }
 }
