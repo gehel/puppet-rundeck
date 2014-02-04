@@ -104,6 +104,24 @@ class rundeck::params {
   $disable = false
   $disableboot = false
 
+  # Node settings
+  $node_name = $::hostname
+  $node_description = undef
+  $node_hostname = $::fqdn
+  $node_osArch = $::architecture
+  $node_osFamily = $::osfamily
+  $node_osName = $::operatingsystem
+  $node_tags = []
+  $node_editUrl = undef
+  $node_remoteUrl = undef
+  $node_attributes = []
+  $node_template = 'rundeck/project/resources-node.xml.erb'
+  $node_username = 'rundeck_node'
+  $node_home_dir = '/var/lib/rundeck_node'
+  $node_ssh_public_key = ''
+  $node_ssh_public_key_type = 'ssh-rsa'
+  $node_ssh_options = []
+
   # ## General module variables that can have a site or per module default
   $monitor = false
   $monitor_tool = ''
